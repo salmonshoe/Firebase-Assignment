@@ -1,17 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Firebase Assignment</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/5.9.1/firebase.js"></script>
 </head>
+
 <body>
-    
+    <h1>Train Schedule</h1>
+    <div class="content">
+        <ul id="train-list">
+            <!--Used to load all the train's from the database-->
+
+            <form id="add-train-form">
+                <input type="text" id="train-name" placeholder="Train Name">
+                <input type="text" id="destination" placeholder="Destination">
+                <input type="time" id="departure" placeholder="First Train Time">
+                <input type="number" id="frequency" placeholder="Frequency (min)">
+                <br />
+                <button id="add-train" type="submit">Add Train</button>
+            </form>
+            <!--Used to add a new train for the future-->
+        </ul>
+    </div>
+    <div class="updates">
+        <div class="car-body">
+            <p id="name-update"></p>
+            <p id="destination-update"></p>
+            <p id="departure-update"></p>
+            <p id="frequency-update"></p>
+        </div>
+    </div>
 
     <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyDdxlfNVjUMAfSTywMRskDFwiemlBA-OR0",
+            authDomain: "train-activity-d8484.firebaseapp.com",
+            databaseURL: "https://train-activity-d8484.firebaseio.com",
+            projectId: "train-activity-d8484",
+            storageBucket: "train-activity-d8484.appspot.com",
+            messagingSenderId: "853671304117"
+        };
+        firebase.initializeApp(config);
+
+        const database = firebase.firestore()
+
+        var trainName = "";
+        var destination = "";
+        var firstTime = "";
+        var frequency = ""; //in minutes
+        //Code to calculate when the next train will arrive; this should be relative to the current time
+        //Users from many different machines must be able to view the same train times
+
+        $("#add-train").on("click", function (event) {
+            event.preventDefault();
+
+            trainName = $("#train-name").val().trim();
+            destination = $("#destination").val().trim();
+            firstTime = ("#departure").val().trim();
+            frequency = ("#frequency").val().trim();
+
+            database.ref().set({
+                trainName: trainName,
+                destination: destination,
+                firstTime: firstTime,
+                frequency: frequency,
+            });
+
+        });
+        /*WTF!! I don't understand why my console states that database.ref is not a function. 
+        It isn't out of scope. Am I not calling it properly?*/
+        database.ref().on("value", function (snapshot) {
+            console.log(snapshot.val());
+            console.log(snapshot.val().trainName);
+            console.log(snapshot.val().destination);
+            console.log(snapshot.val().firstTime);
+            console.log(snapshot.val().frequency);
+
+            $("#name-update").text(snapshot.val.trainName);
+            $("#destination-update").text(snapshot.val.destination);
+            $("#departure-update").text(snapshot.val.firstTime);
+            $("#frequency-update").text(snapshot.val.frequency);
+
+        })
+
+    </script>
+
     <script src="app.js"></script>
 </body>
+
 </html>
