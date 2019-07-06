@@ -14,6 +14,7 @@
 
 <body>
     <h1>Train Schedule</h1>
+    <a href="test.html"><h3>Testing</h3></a>
     <div class="content">
         <ul id="train-list">
             <!--Used to load all the train's from the database-->
@@ -30,11 +31,14 @@
         </ul>
     </div>
     <div class="updates">
-        <div class="car-body">
+        <div class="card-body">
             <p id="name-update"></p>
             <p id="destination-update"></p>
             <p id="departure-update"></p>
             <p id="frequency-update"></p>
+
+            <div id="next-arrival"></div>
+            <div id="minutes-away"></div>
         </div>
     </div>
 
@@ -76,6 +80,9 @@
                 frequency: frequency,
             });
 
+        //Lil bit of math time
+            var nextDepart = 
+
         });
         /*WTF!! I don't understand why my console states that database.ref is not a function. 
         It isn't out of scope. Am I not calling it properly?*/
@@ -90,7 +97,8 @@
             $("#destination-update").text(snapshot.val.destination);
             $("#departure-update").text(snapshot.val.firstTime);
             $("#frequency-update").text(snapshot.val.frequency);
-
+            //It's also frustrating that I can't get the snapshot values to display in p elements on my .updates div.
+            //I am aware that there are tons of bugs to fix, once that is addressed I am able to work on that algorithm.
         })
 
     </script>
